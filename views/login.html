@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Form</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h4>Login</h4>
+          </div>
+          <div class="card-body">
+            <form id="loginForm" method="POST"> <!-- Updated: added id="loginForm" and method="POST" -->
+              <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" placeholder="Enter username">
+              </div>
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" placeholder="Enter password">
+              </div>
+              <button type="submit" class="btn btn-primary w-100 d-inline-block">Login</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-3 justify-content-center">
+      <div class="col-md-6 text-center">
+        <p>Don't have an account? <a href="/signup" class="btn btn-link">Sign up</a></p>
+      </div>
+    </div>
+  </div>
+  </div>
+  <!-- Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <!-- JavaScript code for form submission -->
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async function (event) {
+        event.preventDefault(); // Prevent default form submission
+        const formData = {
+            username: document.getElementById('username').value,
+            password: document.getElementById('password').value,
+        };
+        try {
+            const response = await fetch('/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json' // Specify content type as JSON
+                },
+                body: JSON.stringify(formData) // Convert form data to JSON
+            });
+            const responseData = await response.json(); // Parse JSON data from response
+            if (response.ok) {
+                // Check if the response contains user role and redirect accordingly
+                if (responseData && responseData.role) {
+                    const role = responseData.role;
+                    if (role === 'Student') {
+                        window.location.href = '/student';
+                    } else if (role === 'Staff' || role === 'Admin') {
+                        window.location.href = '/admin';
+                    } else if (role === 'Lecturer') {
+                        window.location.href = '/lecturer';
+                    } else {
+                        console.error('Invalid role:', role);
+                    }
+                } else {
+                    console.error('Invalid response from server:', responseData);
+                }
+            } else {
+                // Handle non-200 status codes (e.g., 401 for unauthorized)
+                console.error('Login failed:', responseData);
+            }
+        } catch (error) {
+            console.error('Error during login:', error);
+        }
+    });
+</script>
+
+</body>
+
+</html>

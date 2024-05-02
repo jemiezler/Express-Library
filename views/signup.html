@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h4>Sign Up</h4>
+          </div>
+          <div class="card-body">
+            <form id="signupForm">
+              <div class="form-group">
+                <label for="userId">User ID</label>
+                <input type="text" class="form-control" id="userId" name="userId" placeholder="Enter your user ID" required>
+              </div>
+              <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" required>
+              </div>
+              <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required>
+              </div>
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
+              </div>
+              <div class="form-group">
+                <label for="role">Role</label>
+                <select class="form-control" id="role" name="role" required>
+                  <option value="">Select role</option>
+                  <option value="Student">Student</option>
+                  <option value="Staff">Staff</option>
+                  <option value="Approver">Approver</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary w-100 d-inline-block">Sign Up</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <!-- Custom script for handling form submission -->
+  <script>
+    document.getElementById('signupForm').addEventListener('submit', async function (event) {
+      event.preventDefault(); // Prevent default form submission
+      const formData = {
+        userId: document.getElementById('userId').value,
+        name: document.getElementById('name').value,
+        username: document.getElementById('username').value,
+        password: document.getElementById('password').value,
+        role: document.getElementById('role').value
+      };
+      try {
+        const response = await fetch('/auth/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+        const data = await response.text(); // Parse response as text
+        if (response.ok) {
+          console.log(data);
+          window.location.href = '/login'; // Log response data
+          // Optionally, redirect to login page or perform other actions
+        } else {
+          console.error('Sign Up failed:', data);
+        }
+      } catch (error) {
+        console.error('Error during Sign Up:', error);
+      }
+    });
+  </script>
+</body>
+</html>
